@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New England Patriots Planner</title>
+  <meta name="description" content="Planifica citas y eventos importantes con el estilo azul marino y rojo de los New England Patriots.">
+  <meta name="keywords" content="Patriots, New England, NFL, agenda, planner, calendario, recordatorios, football americano">
+  <meta name="author" content="Nicolas Castañeda">
+  <meta name="copyright" content="Nicolas Castañeda 2025">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    :root{
+      --patriots-navy: #002244;
+      --patriots-red: #C60C30;
+      --patriots-silver: #B0B7BC;
+      --bg: #ffffff;
+      --text: #222;
+      --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    /* Dark mode variables */
+    .dark {
+      --bg: #0b0b0b;
+      --text: #f5f5f5;
+      --card-shadow: 0 6px 24px rgba(0,0,0,0.5);
+      --patriots-navy: #003766;
+    }
+
+    html,body{
+      background-color: var(--bg);
+      color: var(--patriots-red); /* Color de acento */
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      scroll-behavior: smooth;
+    }
+
+    body { color: var(--text); }
+
+    .navbar, .footer, .card, .offcanvas, .modal-content {
+        background-color: var(--bg);
+        border-color: var(--patriots-red);
+    }
+    .btn-primary, .btn-success, .btn-secondary, .btn-warning, .btn-danger {
+        background-color: var(--patriots-navy) !important; /* Botones principales en Azul Marino */
+        border: none !important;
+        color: #fff !important;
+    }
+    .btn-outline-gold {
+      border: 1px solid var(--patriots-red); /* Borde Rojo */
+      color: var(--patriots-red);
+      background: transparent;
+    }
+    .nav-tabs .nav-link.active {
+        background-color: var(--patriots-navy);
+        color: white;
+    }
+
+    /* Carousel images */
+    .carousel-item img { max-height: 480px; object-fit: cover; }
+
+    /* Cards */
+    .card { border-radius: 12px; box-shadow: var(--card-shadow); transition: transform .18s ease; }
+    .card:hover { transform: translateY(-6px); }
+
+    /* Calendar */
+    .calendar { user-select: none; }
+    .calendar .day { min-height: 88px; border: 1px solid rgba(0,0,0,0.04); padding: .4rem; }
+    .calendar .day .date-num { font-weight: 700; color: var(--patriots-red); }
+    .event-badge { display:block; margin-top:.35rem; padding: .18rem .35rem; border-radius:6px; background: linear-gradient(90deg, var(--patriots-navy), var(--patriots-red)); color: #fff; font-size: 0.78rem; text-overflow: ellipsis; max-width:100%; overflow:hidden; white-space:nowrap; }
+
+    /* Post-it notes */
+    .note { min-height: 100px; padding: 12px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.08); background: linear-gradient(180deg,#fff,#fffef6); }
+    .note .note-actions { display:flex; gap:.5rem; justify-content:flex-end; }
+
+    /* Offcanvas news */
+    .news-item { border-bottom: 1px dashed rgba(0,0,0,0.06); padding: .6rem 0; }
+
+    /* Upcoming matches */
+    .match-card { border-left: 4px solid var(--patriots-red); padding-left: .8rem; }
+
+    /* Dark-mode toggle */
+    .mode-toggle { cursor:pointer; }
+
+    /* Small helpers */
+    .muted { color: rgba(0,0,0,0.45); }
+    .gold-text { color: var(--patriots-red); } /* Mantenemos la clase pero cambiamos el color a Rojo */
+
+    /* Custom Testimonial Style */
+    .testimonial-card {
+        background: var(--bg);
+        border: 1px solid rgba(198, 12, 48, 0.2); /* Rojo más claro */
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+    }
+    .testimonial-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .testimonial-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 3px solid var(--patriots-navy);
+    }
+
+
+    /* Responsive tweaks */
+    @media (max-width:768px){
+      .carousel-item img { max-height: 280px; }
+    }
+
+    /* subtle animations */
+    .fade-in { animation: fadeIn .45s ease both; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform: none;} }
+  </style>
+</head>
+
+<body class="fade-in">
+
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm" style="background: var(--bg);">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="logopatsss.jpg" height="64" alt="Logo New England Patriots" class="me-2" onerror="this.src='https://placehold.co/64x64/002244/C60C30?text=NE'">
+      <div>
+        <div class="fw-semibold">Agenda Patriots</div>
+        <small class="text-muted" style="color:var(--text);font-size:.8rem">Planificador Oficial (personal)</small>
+      </div>
+    </a>
+    <li class="nav-item">
+  <button class="btn btn-outline-gold ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
+    <i class="fa-solid fa-cart-shopping"></i> Carrito
+  </button>
+</li>
+
+
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      <button id="toggleMode" class="btn btn-outline-gold mode-toggle" title="Modo oscuro">
+        <i id="modeIcon" class="fa-regular fa-moon"></i>
+      </button>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="#agenda">Agenda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#calendarSection">Calendario</a></li>
+        <li class="nav-item"><a class="nav-link" href="#notasSection">Notas</a></li>
+        <li class="nav-item"><a class="nav-link" href="#partidos">Próximos Partidos</a></li>
+        <li class="nav-item"><button class="btn btn-outline-gold ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNews">Noticias</button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="estadiopats.jpg" class="d-block w-100" alt="Estadio Gillette Stadium">
+    </div>
+    <div class="carousel-item">
+      <img src="imgjugadores.jpg" class="d-block w-100" alt="Jugadores Patriots">
+    </div>
+    <div class="carousel-item">
+      <img src="superbowls.jpg" class="d-block w-100" alt="Trofeos de los Patriots">
+    </div>
+  </div>
+</div>
+
+<main class="container my-5">
+
+  <section class="text-center mb-4">
+    <h1 class="mb-2">Bienvenidos al New England Patriots Planner</h1>
+    <p class="lead">Organiza tu día con el espíritu de Foxborough.</p>
+  </section>
+
+  <section class="row g-4 mb-4">
+    <div class="col-md-8">
+      <div class="card p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="mb-1">Alertas</h5>
+            <p class="mb-0 muted">¡Nuevas funciones disponibles en tu agenda Patriots!</p>
+          </div>
+          <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIA">Info rápida</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6 class="mb-2">Próximos partidos</h6>
+        <div id="nextMatches" class="d-flex flex-column gap-2">
+          </div>
+        <a href="#partidos" class="small mt-2 d-inline-block">Ver calendario de partidos →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="agenda" class="mb-5">
+    <h2 class="mb-3">Notas disponibles</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h5>Noticias del Equipo</h5>
+          <p class="mb-2">Recibe información de los Patriots actualizada.</p>
+          <a href="#" class="btn btn-primary">Más información</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card p-0">
+          <img src="entrenepats.webp" class="card-img-top" alt="Entrenamiento Patriots">
+          <div class="card-body">
+            <h5 class="card-title">Recordatorios</h5>
+            <p class="card-text">No te pierdas partidos ni eventos importantes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card p-3">
+          <div class="card-header">Calendario de la NFL</div>
+          <div class="card-body">
+            <h5 class="card-title">Calendario</h5>
+            <p class="card-text">Revisa fechas de partidos, conferencias de prensa y más.</p>
+            <a href="#calendarSection" class="btn btn-success">Ver calendario</a>
+          </div>
+          <div class="card-footer text-muted">¡Actualízalo cada semana!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="notasSection" class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Notas rápidas</h2>
+      <div>
+        <button id="btnAddNote" class="btn btn-outline-gold">+ Nueva nota</button>
+        <button id="btnClearNotes" class="btn btn-outline-gold ms-2">Limpiar notas</button>
+      </div>
+    </div>
+
+    <div id="notesContainer" class="row g-3">
+      </div>
+  </section>
+
+  <section id="calendarSection" class="mb-5">
+    <h2 class="mb-3">Calendario Interactivo</h2>
+    <div class="card p-3">
+      <div class="d-flex align-items-center justify-content-between mb-3 gap-2">
+        <div>
+          <button id="prevMonth" class="btn btn-outline-gold me-2"><i class="fa-solid fa-chevron-left"></i></button>
+          <button id="nextMonth" class="btn btn-outline-gold"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="fw-bold" id="monthYear">Mes Año</div>
+        <div>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddEvent">+ Agregar evento</button>
+        </div>
+      </div>
+
+      <div id="calendarGrid" class="row calendar">
+        </div>
+    </div>
+  </section>
+
+  <section id="partidos" class="mb-5">
+    <h2 class="mb-3">Próximos partidos</h2>
+    <div class="row g-3" id="matchesList">
+      </div>
+  </section>
+  
+  <section id="opinionesSection" class="container my-5">
+    <h2 class="mb-4 text-center">🎙️ Envía tu Opinión (Se guarda en tu navegador)</h2>
+    
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form id="formOpinion" class="card p-4 mb-4">
+          <h5 class="card-title">Deja tu opinión</h5>
+          <div class="mb-3">
+            <textarea id="opinionTexto" class="form-control" placeholder="Escribe aquí tu testimonio sobre el planificador o el equipo..." rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar Testimonio</button>
+        </form>
+        
+        <div class="card p-4">
+          <h5 class="card-title">Testimonios Guardados Localmente</h5>
+          <ul id="opinionesContainer" class="list-group list-group-flush">
+            </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="destacadosSection" class="container my-5">
+    <h2 class="mb-4 text-center gold-text">⭐ Testimonios de la Nación Patriot ⭐</h2>
+    <div class="row g-4">
+      
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <img src="emprendhombre.png" alt="Usuario Emprendedor" class="img-fluid">
+          <p class="lead">"¡El mejor planificador! Me permite seguir cada jugada y cada cita sin perder el ritmo de mi negocio."</p>
+          <small class="fw-bold d-block text-muted">— Javier, Empresario</small>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <img src="testhombre.png" alt="Usuario Fanático" class="img-fluid">
+          <p class="lead">"Desde que uso este planner, nunca más me he perdido un partido clave. ¡Patriots hasta el final!"</p>
+          <small class="fw-bold d-block text-muted">— Miguel, Fanático Leal</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <img src="Test mujer.png" alt="Usuaria Deportista" class="img-fluid">
+          <p class="lead">"Combino mis estudios y mi entrenamiento con el calendario. El modo oscuro es perfecto para la noche."</p>
+          <small class="fw-bold d-block text-muted">— Sofía, Estudiante y Deportista</small>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="row g-4 mb-5">
+    <div class="col-md-6">
+      <h3>Imágenes dinámicas (Galería)</h3>
+      <div class="input-group mb-3">
+        <input type="text" id="inputImagen" class="form-control" placeholder="Ingresa la URL de la imagen">
+        <button id="btnAgregarImagen" class="btn btn-primary">Agregar Imagen</button>
+      </div>
+      <div id="galeria" class="row g-3"></div>
+    </div>
+
+    <div class="col-md-6">
+      <h3>Regístrate para recibir notificaciones</h3>
+      <form id="registroForm" class="border p-4 rounded" style="border-color: var(--patriots-red);">
+        <div class="mb-3">
+          <label class="form-label">Nombre completo</label>
+          <input id="regNombre" type="text" class="form-control" placeholder="Tu nombre" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Correo electrónico</label>
+          <input id="regEmail" type="email" class="form-control" placeholder="tucorreo@example.com" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">¿Deseas recibir recordatorios del club?</label>
+          <select id="regNotif" class="form-select">
+            <option>Sí, quiero recibir notificaciones</option>
+            <option>No por el momento</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Registrarme</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="lista-warrior" class="container my-5">
+    <h2 class="mb-4">Lista de Tareas</h2>
+
+    <button id="btnEliminarPrimero" class="btn btn-danger mb-3">Eliminar primera tarea</button>
+
+    <ul id="listaTareas" class="list-group mb-3">
+      <li class="tarea1 list-group-item">El partido de ayer estuvo buenísimo</li>
+      <li class="tarea2 list-group-item">Gillette Stadium es mi lugar favorito</li>
+      <li class="tarea3 list-group-item">¡A ganar el próximo partido!</li>
+    </ul>
+
+    <div class="input-group mt-3">
+      <input id="inputNuevaTarea" type="text" class="form-control" placeholder="Escribe una nueva tarea">
+      <button id="btnAgregarTarea" class="btn btn-success">Agregar Tarea</button>
+    </div>
+  </section>
+
+  <section class="container my-5">
+    <h2 class="mb-4 text-center">Buscador de Campeonatos de los Patriots</h2>
+
+    <div class="input-group mb-3">
+      <input type="text" id="searchTrofeo" class="form-control"
+             placeholder="Escribe un campeonato: super bowl, afc...">
+      <button id="btnBuscarTrofeo" class="btn btn-primary">Buscar</button>
+    </div>
+
+    <ul id="trofeosResultado" class="list-group"></ul>
+  </section>
+
+</main>
+
+<div class="modal fade" id="modalIA" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Información de los Patriots</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">Gestiona tus actividades y sigue a los New England Patriots desde una sola agenda.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button class="btn btn-primary">Inscribirme</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAddEvent" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="eventForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar evento</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Título</label>
+          <input id="eventTitle" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Fecha</label>
+          <input id="eventDate" type="date" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <textarea id="eventDesc" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar evento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" id="offcanvasNews" tabindex="-1">
+  <div class="offcanvas-header">
+    <h5>Noticias - New England Patriots</h5>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div id="newsList">
+      <div class="news-item">
+        <strong>Victoria en la AFC</strong>
+        <p class="mb-0 muted small">Resumen del último partido — Actualizado</p>
+      </div>
+      <div class="news-item">
+        <strong>Conferencia de prensa - entrenador</strong>
+        <p class="mb-0 muted small">Declaraciones previas al encuentro importante.</p>
+      </div>
+      <div class="news-item">
+        <strong>Entrega de anillos de Super Bowl</strong>
+        <p class="mb-0 muted small">Galería de fotos y cronología.</p>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button id="refreshNews" class="btn btn-outline-gold">Refrescar noticias</button>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" id="offcanvasCart" tabindex="-1">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Carrito de Compras</h5>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <ul id="cartList" class="list-group mb-3"></ul>
+
+    <h5 class="mb-3">Total: <span id="cartTotal">0</span> €</h5>
+
+    <button id="clearCart" class="btn btn-danger w-100">Vaciar Carrito</button>
+  </div>
+</div>
+
+<section class="container mt-5">
+  <h2 class="text-center mb-4">Tienda Oficial New England Patriots</h2>
+
+  <div class="row mt-4">
+
+    <div class="col-md-4">
+      <div class="card shadow">
+        <img src="jeerseyretro.jpg"
+             class="card-img-top" alt="Jersey Patriots">
+        <div class="card-body">
+          <h5 class="card-title">Jersey Oficial Patriots</h5>
+          <p class="card-text">Edición oficial. Calidad premium.</p>
+          <p class="fw-bold">Precio: 99 €</p>
+          <button class="btn btn-primary addToCart" data-name="Jersey Patriots" data-price="99">
+            Agregar al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow">
+        <img src="gorrapats.webp"
+             class="card-img-top" alt="Gorra Patriots">
+        <div class="card-body">
+          <h5 class="card-title">Gorra New Era Patriots Oficial</h5>
+          <p class="card-text">Gorra con logo bordado.</p>
+          <p class="fw-bold">Precio: 35 €</p>
+          <button class="btn btn-primary addToCart" data-name="Gorra Patriots" data-price="35">
+            Agregar al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow">
+        <img src="balonofcpats.webp"
+             class="card-img-top" alt="Balón NFL">
+        <div class="card-body">
+          <h5 class="card-title">Balón Oficial NFL</h5>
+          <p class="card-text">Balón oficial de juego o entrenamiento.</p>
+          <p class="fw-bold">Precio: 55 €</p>
+          <button class="btn btn-primary addToCart" data-name="Balón Oficial NFL" data-price="55">
+            Agregar al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<a href="https://wa.me/7291541191" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chatea por WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<footer class="footer text-center py-4 mt-5" style="background:var(--bg);">
+  <div class="container">
+    <p class="mb-1">&copy; 2025 Nicolas Castañeda | Todos los derechos reservados</p>
+    <div class="mb-2">
+      <a href="#" class="me-3 gold-text"><i class="fab fa-facebook fa-lg"></i></a>
+      <a href="#" class="me-3 gold-text"><i class="fab fa-instagram fa-lg"></i></a>
+      <a href="#" class="me-3 gold-text"><i class="fab fa-youtube fa-lg"></i></a>
+      <a href="#" class="gold-text"><i class="fab fa-x-twitter fa-lg"></i></a>
+    </div>
+
+    <small class="muted">Diseñado y desarrollado por Nicolas Castañeda</small>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="app.js" defer></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
